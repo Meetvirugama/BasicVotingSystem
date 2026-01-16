@@ -1,3 +1,4 @@
+
 # 🎃🗳️ BasicVotingSystem
 
 **BasicVotingSystem** is a full-stack voting platform that allows users to participate in elections securely, while administrators manage elections, votes, and results.
@@ -193,6 +194,8 @@ npm run dev
 ## 🎨 CSS & Styling Note
 
 * All CSS is written manually with help from **ChatGPT**
+
+
 * Additional inspiration taken from **online CSS frameworks & UI references**
 * No component library (like MUI or Bootstrap) is used
 * Focus on **custom theme design and animations**
@@ -234,3 +237,21 @@ If you like this project, give it a ⭐ and feel free to contribute!
 ---
 
 🎃 **Happy Voting & Happy Halloween!** 🗳️
+
+
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 36 51 AM" src="https://github.com/user-attachments/assets/b3fbf856-bada-484a-a832-9f62e735e227" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 36 43 AM" src="https://github.com/user-attachments/assets/2402eb0d-ef5b-4638-8d39-3e377fcf85e9" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 36 36 AM" src="https://github.com/user-attachments/assets/c4b69456-2aaf-4336-8dcb-d5ddaf52763e" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 36 33 AM" src="https://github.com/user-attachments/assets/34f76251-48eb-4c4d-ba3a-013ce07bc39f" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 35 51 AM" src="https://github.com/user-attachments/assets/17eb0396-204b-4446-9fe4-89fffce2e3f8" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 35 41 AM" src="https://github.com/user-attachments/assets/f56c86d3-79ef-4d21-a0df-fe78b0d93e33" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 35 25 AM" src="https://github.com/user-attachments/assets/8519b3a7-06c2-4adf-91f5-491c459c6416" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 35 12 AM" src="https://github.com/user-attachments/assets/7517c938-79db-4e9a-8f84-c51b3c1ff38e" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 34 42 AM" src="https://github.com/user-attachments/assets/38a3dbc5-256f-41bc-96d7-577d6f7dda20" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 35 04 AM" src="https://github.com/user-attachments/assets/90db3310-9985-4da3-b4da-0891e2109981" />
+<img width="1462" height="754" alt="Screenshot 2026-01-17 at 4 34 48 AM" src="https://github.com/user-attachments/assets/58554139-af59-479d-bf80-23d5afc1b9e2" />
+
+
+
+
+
