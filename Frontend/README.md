@@ -1,16 +1,236 @@
-# React + Vite
+# 🎃🗳️ BasicVotingSystem
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**BasicVotingSystem** is a full-stack voting platform that allows users to participate in elections securely, while administrators manage elections, votes, and results.
 
-Currently, two official plugins are available:
+The application is built with a **Halloween-themed neon UI**, role-based access control, and a modern full-stack architecture.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 👥 User Roles
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The system supports **two types of users**:
 
-## Expanding the ESLint configuration
+* **Voter**
+* **Admin**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Each role has different permissions enforced on both the frontend and backend.
+
+---
+
+## 🚀 Features
+
+### 👤 Voter Features
+
+* User Registration & Login (Firebase Authentication)
+* View **Live Elections**
+* View **Upcoming Elections**
+* View **Previous / Result Elections**
+* **Vote only once per election**
+* View vote status (Voted / Not Voted)
+* **Search elections**
+* **Sort elections** (date, status, category)
+* View & manage **Profile**
+* **Edit profile details**
+* **Logout**
+* Dark Mode support
+
+---
+
+### 🛠️ Admin Features
+
+* All voter features
+* **Create new elections**
+* **Edit elections**
+* **Delete elections** (Admin-only)
+* View **total votes per election**
+* View detailed election results
+* Access protected admin routes
+* Role-based backend middleware (`adminOnly`)
+
+---
+
+## 🎃 UI Theme
+
+* Halloween / Neon theme used across the application
+* Pumpkin-style fonts and glowing cards
+* Animated vote bars with winner/loser effects
+* Dark Mode enabled by default
+* Fully responsive layout
+
+---
+
+## 🧱 Tech Stack
+
+### Frontend
+
+* React (Vite)
+* Context API (AuthContext)
+* Custom CSS (Halloween / Neon theme)
+* Firebase Authentication
+
+### Backend
+
+* Node.js
+* Express.js
+* **PostgreSQL**
+* Firebase Admin SDK
+* JWT Authentication
+* Role-based middleware
+
+---
+
+## 🗄️ Database
+
+* **PostgreSQL** is used as the primary database
+* Stores:
+
+  * Users
+  * Elections
+  * Votes
+* Enforces:
+
+  * One vote per user per election
+  * Relational integrity
+  * Secure vote aggregation
+
+---
+
+## 📁 Project Structure
+
+```
+BasicVotingSystem/
+│
+├── Backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   │   ├── auth.controller.js
+│   │   │   ├── election.controller.js
+│   │   │   ├── vote.controller.js
+│   │   │   └── user.controller.js
+│   │   ├── middleware/
+│   │   │   └── adminOnly.js
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── server.js
+│   ├── .env
+│   └── serviceAccountKey.json
+│
+├── Frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ElectionsList.jsx
+│   │   │   ├── ElectionCreate.jsx
+│   │   │   ├── EditElection.jsx
+│   │   │   ├── ResultBar.jsx
+│   │   │   ├── Search.jsx
+│   │   │   ├── Profile.jsx
+│   │   │   └── Navbar.jsx
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx
+│   │   ├── auth/
+│   │   │   └── firebase.js
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── assets/
+│   ├── public/
+│   │   └── *.css
+│   ├── App.jsx
+│   └── main.jsx
+│
+└── README.md
+```
+
+---
+
+## 🔐 Role-Based Access Control
+
+| Action                  | Voter | Admin |
+| ----------------------- | ----- | ----- |
+| Vote in election        | ✅     | ✅     |
+| Search & sort elections | ✅     | ✅     |
+| View results            | ✅     | ✅     |
+| Create election         | ✅     | ✅     |
+| Edit election           | ❌     | ✅     |
+| Delete election         | ❌     | ✅     |
+| View total votes        | ❌     | ✅     |
+
+---
+
+## ⚙️ Environment Variables
+
+### Backend (`.env`)
+
+```
+PORT=5000
+DATABASE_URL=postgresql://username:password@localhost:5432/basic_voting_system
+JWT_SECRET=your_secret_key
+```
+
+---
+
+## ▶️ Run Locally
+
+### Backend
+
+```bash
+cd Backend
+npm install
+npm start
+```
+
+### Frontend
+
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+
+---
+
+## 🎨 CSS & Styling Note
+
+* All CSS is written manually with help from **ChatGPT**
+* Additional inspiration taken from **online CSS frameworks & UI references**
+* No component library (like MUI or Bootstrap) is used
+* Focus on **custom theme design and animations**
+
+---
+
+## 🧪 Security
+
+* Firebase Authentication
+* JWT-based authorization
+* Admin-only middleware
+* Protected frontend routes
+* One-vote-per-user enforcement
+
+---
+
+## 👨‍💻 Developer
+
+**Meet Virugama**
+Full Stack Developer
+Project: **BasicVotingSystem**
+
+---
+
+## 📌 Future Improvements
+
+* Real-time vote updates
+* Admin analytics dashboard
+* Email notifications
+* Multi-candidate elections
+* Mobile UI optimization
+
+---
+
+## ⭐ Show Your Support
+
+If you like this project, give it a ⭐ and feel free to contribute!
+
+---
+
+🎃 **Happy Voting & Happy Halloween!** 🗳️
