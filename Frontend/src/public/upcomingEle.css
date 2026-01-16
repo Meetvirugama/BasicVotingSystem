@@ -1,0 +1,47 @@
+/* upcoming-elections.css */
+
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.title-with-img {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-img {
+  width: 45px; /* adjust size as needed */
+  height: 45px;
+  object-fit: contain; /* keeps aspect ratio */
+  margin: 20px;
+}
+
+
+.up-wait {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 18px;
+  text-align: center;
+  font-size: 15px;
+  letter-spacing: 2px;
+  color: #ffddb0;
+  background: linear-gradient(
+    135deg,
+    rgba(255,127,17,0.25),
+    rgba(164,79,255,0.25)
+  );
+  border: 1px dashed rgba(255,127,17,0.6);
+  text-shadow: 0 0 8px #ff7f11;
+}
+
+.up-empty {
+  margin-top: 90px;
+  text-align: center;
+  font-size: 26px;
+  letter-spacing: 4px;
+  color: #ffb347;
+  text-shadow: 0 0 14px #ff7f11;
+}
+

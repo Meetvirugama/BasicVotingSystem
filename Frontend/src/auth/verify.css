@@ -1,0 +1,278 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+
+/* =====================
+   THEME VARIABLES
+===================== */
+:root {
+  --bg: #f9fafb;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+}
+
+[data-theme="dark"] {
+  --bg: #0b0e12;
+  --card: #12151c;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+}
+
+/* =====================
+   ROOT
+===================== */
+* {
+  box-sizing: border-box;
+}
+
+.scene-root {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =====================
+   CARD
+===================== */
+.horror-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 32px 28px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+  z-index: 5;
+  text-align: center;
+}
+
+.title-main {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.title-glow {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #8b0f11;
+  margin-bottom: 10px;
+}
+
+.creator {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+/* =====================
+   INPUTS (MDB SAFE)
+===================== */
+.form-control {
+  width: 100%;
+  background: #ffffff;
+  border: 1.5px solid #d1d5db;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.95rem;
+}
+
+[data-theme="dark"] .form-control {
+  background: #0b0e12;
+  color: #f9fafb;
+  border-color: #374151;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #8b0f11;
+  box-shadow: 0 0 0 3px rgba(139,15,17,0.25);
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* =====================
+   BUTTONS
+===================== */
+.btn-dark {
+  width: 100%;
+  padding: 13px 0;
+  margin-top: 16px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #3b2f4a, #241b33);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-dark:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+}
+
+.btn-dark.alt {
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid #8b0f11;
+}
+
+.btn-dark.alt:hover {
+  color: #8b0f11;
+}
+
+/* =====================
+   FORGOT LINK
+===================== */
+.forgot-link {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: #8b0f11;
+  cursor: pointer;
+}
+
+/* =====================
+   🎃 LOADER OVERLAY
+===================== */
+.pumpkin-loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+[data-theme="dark"] .pumpkin-loader {
+  background: rgba(0,0,0,0.9);
+}
+
+/* =====================
+   🎃 YELLOW PUMPKIN
+===================== */
+.pumpkin {
+  position: relative;
+  width: 200px;
+  height: 160px;
+  border-radius: 55% 55% 50% 50%;
+  background: linear-gradient(to right, #ffd84d, #ffcc00);
+  box-shadow:
+    inset -18px 0 0 #f1b800,
+    inset 18px 0 0 #ffe680,
+    0 30px 50px rgba(0,0,0,0.35);
+  animation: pumpkinBreath 2.8s ease-in-out infinite;
+}
+
+@keyframes pumpkinBreath {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* STEM */
+.stem {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 34px;
+  background: linear-gradient(#5a7a2b, #3e5a1f);
+  border-radius: 0 0 10px 10px;
+}
+
+/* RIBS */
+.rib {
+  position: absolute;
+  top: 12px;
+  bottom: 14px;
+  width: 16px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.15);
+}
+.r1 { left: 40px; }
+.r2 { left: 68px; }
+.r3 { right: 68px; }
+.r4 { right: 40px; }
+
+/* FACE */
+.face {
+  position: absolute;
+  inset: 50px 40px;
+}
+
+/* 🎃 BLINKING ORANGE EYES */
+.eye {
+  position: absolute;
+  width: 24px;
+  height: 20px;
+  background: #ff8c00;
+  box-shadow:
+    0 0 12px rgba(255,140,0,0.9),
+    0 0 22px rgba(255,140,0,0.6);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation: blink 4s infinite;
+  transform-origin: center;
+}
+
+.eye.left { left: 0; }
+.eye.right { right: 0; }
+
+@keyframes blink {
+  0%,92%,100% { transform: scaleY(1); }
+  94% { transform: scaleY(0.1); }
+  96% { transform: scaleY(1); }
+}
+
+/* NOSE */
+.nose {
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 14px;
+  background: #111;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* MOUTH */
+.mouth {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+}
+
+.mouth span {
+  width: 16px;
+  height: 22px;
+  background: #111;
+  border-radius: 0 0 8px 8px;
+  animation: chew 1.4s ease-in-out infinite alternate;
+}
+
+@keyframes chew {
+  to { height: 28px; }
+}
+
+/* =====================
+   MOBILE
+===================== */
+@media (max-width: 480px) {
+  .horror-card {
+    margin: 0 14px;
+    padding: 24px;
+  }
+}

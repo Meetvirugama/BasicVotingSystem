@@ -1,0 +1,300 @@
+@import url("https://fonts.googleapis.com/css2?family=Creepster&family=Metal+Mania&display=swap");
+
+/* ===== ROOT / THEME ===== */
+:root {
+  --pumpkin-font: "Creepster", cursive;
+  --number-font: "Metal Mania", cursive;
+
+  --pumpkin: #ff7f11;
+  --purple: #a44fff;
+  --green: #22ff88;
+  --bone: #f5f2e9;
+
+  --dark-bg: rgba(20, 10, 20, 0.85);
+  --card-border: rgba(255,255,255,0.06);
+}
+
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--pumpkin-font);
+}
+
+/* ===== PAGE BASE ===== */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #16000b, #000000 80%);
+  color: var(--bone);
+}
+
+/* ===== SCROLLABLE PAGE ===== */
+.elections-page {
+  position: absolute;
+  inset: 0;
+  padding: 140px 26px 60px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ===== TITLE ===== */
+.page-title {
+  margin-top: 30px;
+  font-size: 46px;
+  letter-spacing: 6px;
+  color: var(--pumpkin);
+  text-shadow: 0 0 14px var(--pumpkin), 0 0 30px var(--purple);
+  margin-bottom: 30px;
+}
+
+/* ===== GRID ===== */
+.election-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 26px;
+}
+
+/* ===== CARD ===== */
+.election-card {
+  padding: 28px;
+  border-radius: 26px;
+  background: var(--dark-bg);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 0 25px #000, 0 0 18px var(--purple);
+  transition: 0.35s;
+}
+
+.election-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 30px var(--pumpkin), 0 0 45px var(--purple);
+}
+
+/* ===== ELECTION TEXT ===== */
+.election-title {
+  font-size: 28px;
+  color: var(--pumpkin);
+  text-shadow: 0 0 8px var(--pumpkin), 0 0 14px var(--purple);
+  margin-bottom: 10px;
+}
+
+.election-desc {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #ffe6c7;
+  margin-bottom: 16px;
+}
+
+/* ===== TAGS ===== */
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tag-chip {
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: bold;
+  background: linear-gradient(135deg, var(--pumpkin), var(--purple));
+  color: #000;
+  text-shadow: 0 0 4px #fff;
+}
+
+/* ===== DATES ===== */
+.date-row {
+  font-size: 14px;
+  color: #ffb347;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ===== VOTE BOARD ===== */
+.vote-board {
+  margin: 18px 0;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(0,0,0,0.45);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+}
+
+.vote-box {
+  font-family: var(--number-font);
+  font-size: 24px;
+  color: var(--pumpkin);
+  text-shadow: 0 0 10px var(--pumpkin);
+}
+
+.vote-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #ffddb0;
+  margin-top: 4px;
+}
+
+/* ===== VOTING BUTTONS ===== */
+.team-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.vote-btn {
+  flex: 1;
+  padding: 14px 0;
+  border-radius: 20px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+  text-shadow: 0 0 4px #fff;
+}
+
+.vote-btn.team-a {
+  background: linear-gradient(135deg, #22ff88, #009944);
+  color: #001a0c;
+  box-shadow: 0 0 16px #22ff88;
+}
+
+.vote-btn.team-b {
+  background: linear-gradient(135deg, #ff4ecd, var(--purple));
+  color: #fff;
+  box-shadow: 0 0 16px var(--purple);
+}
+
+.vote-btn:hover:not(:disabled) {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px var(--pumpkin), 0 0 25px var(--purple);
+}
+
+.vote-btn:disabled {
+  background: rgba(255,255,255,0.15);
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* ===== LOADING ===== */
+.loading {
+  margin-top: 80px;
+  text-align: center;
+  font-size: 34px;
+  letter-spacing: 4px;
+  color: var(--pumpkin);
+  text-shadow: 0 0 12px var(--pumpkin);
+}
+
+.upcoming-info {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 127, 17, 0.15);
+  border: 1px dashed rgba(255, 127, 17, 0.4);
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  color: #ffddb0;
+  text-shadow: 0 0 6px var(--pumpkin);
+}
+
+/* =========================
+   ADMIN ACTIONS
+========================= */
+
+.admin-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.admin-delete {
+  padding: 10px 18px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #fff;
+  background: linear-gradient(135deg, #ff0000, #8b0000);
+  box-shadow: 0 0 16px rgba(255, 0, 0, 0.9);
+  transition: all 0.3s ease;
+}
+
+.admin-delete:hover {
+  transform: scale(1.1) rotate(-1deg);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 1);
+}
+
+/* =========================
+   RESULT HIDDEN
+========================= */
+
+.result-hidden {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 16px;
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  color: #ffddb0;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px dashed rgba(255, 127, 17, 0.5);
+  text-shadow: 0 0 6px #ff7f11;
+}
+
+/* =========================
+   WINNER BADGE
+========================= */
+
+.winner-badge {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 16px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: #1a0c00;
+  background: linear-gradient(135deg, #ffdd99, #ff9f1c);
+  box-shadow: 0 0 18px rgba(255, 221, 153, 0.85);
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+}
+
+/* TIE STATE */
+.winner-badge.tie {
+  background: linear-gradient(135deg, #777, #444);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(180, 180, 180, 0.7);
+  text-shadow: none;
+}
+
+/* =========================
+   ADMIN EDIT BUTTON (ADDED)
+========================= */
+
+.admin-edit {
+  padding: 10px 18px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #1a0c00;
+  background: linear-gradient(135deg, #ffdd55, #ff7f11);
+  box-shadow: 0 0 16px rgba(255, 127, 17, 0.9);
+  margin-right: 12px;
+  transition: all 0.3s ease;
+}
+
+.admin-edit:hover {
+  transform: scale(1.1) rotate(1deg);
+  box-shadow: 0 0 30px rgba(255, 127, 17, 1);
+}

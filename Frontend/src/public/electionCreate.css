@@ -1,0 +1,112 @@
+/* PAGE CONTAINER */
+.create-election-page {
+   margin-top: 100px;
+  background: linear-gradient(to bottom, #1c1c1c, #2b2b2b);
+  padding: 2rem 1rem;
+  width: 100%;
+  min-height: 100vh;
+  display: block; /* remove flex centering */
+  overflow-y: auto; /* scrollable */
+}
+
+/* CARD */
+.create-election-card {
+ 
+  background: linear-gradient(135deg, #ff6f61, #ff9933);
+  padding: 2rem;
+  border-radius: 20px;
+  max-width: 700px;
+  margin: 2rem auto; /* start from top, scroll naturally */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  animation: cardFadeIn 0.8s ease;
+  transition: transform 0.3s ease;
+}
+
+/* HOVER FLOAT */
+.create-election-card:hover {
+  transform: translateY(-5px);
+}
+
+@keyframes cardFadeIn {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* TITLE */
+.create-election-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  text-shadow: 0 0 10px #000;
+}
+
+/* FORM ROWS */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-input, .form-textarea {
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  background: #fff2e6;
+}
+
+.form-input:focus, .form-textarea:focus {
+  box-shadow: 0 5px 20px rgba(255, 255, 255, 0.7);
+  border: 2px solid #fff;
+}
+
+.full-width { flex: 1 1 100%; }
+.half-width { flex: 1 1 calc(50% - 0.5rem); }
+
+label {
+  color: #fff;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+}
+
+.create-election-btn {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(45deg, #ff3b2f, #ff6f61);
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.create-election-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.6);
+}
+
+::placeholder {
+  color: #333;
+  font-weight: 500;
+}
+
+@media screen and (max-width: 700px) {
+  .form-row { flex-direction: column; }
+  .half-width { flex: 1 1 100%; }
+}

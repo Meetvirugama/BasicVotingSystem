@@ -1,0 +1,156 @@
+@import url("https://fonts.googleapis.com/css2?family=Creepster&family=Metal+Mania&display=swap");
+
+/* =========================
+   ROOT VARIABLES
+========================= */
+
+:root {
+  --pumpkin: #ff7f11;
+  --purple: #a44fff;
+  --blood: #8b0000;
+  --bone: #f5f2e9;
+  --dark-bg: rgba(20, 10, 20, 0.88);
+}
+
+/* =========================
+   EDIT PAGE BASE
+========================= */
+
+.edit-page {
+  min-height: 100vh;
+  padding: 160px 24px 60px;
+  background: radial-gradient(circle at top, #16000b, #000000 80%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--bone);
+  font-family: "Creepster", cursive;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.edit-page h2 {
+  margin-bottom: 34px;
+  font-size: 38px;
+  letter-spacing: 6px;
+  color: var(--pumpkin);
+  text-shadow:
+    0 0 12px var(--pumpkin),
+    0 0 28px var(--purple),
+    0 0 42px rgba(255, 127, 17, 0.6);
+}
+
+/* =========================
+   INPUTS & TEXTAREA
+========================= */
+
+.edit-page input,
+.edit-page textarea {
+  width: 100%;
+  max-width: 540px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+
+  border-radius: 22px;
+  border: 1px solid rgba(255, 127, 17, 0.45);
+  background: rgba(0, 0, 0, 0.55);
+
+  font-size: 15px;
+  color: #ffe6c7;
+  outline: none;
+
+  box-shadow:
+    inset 0 0 12px rgba(255, 127, 17, 0.25),
+    0 0 12px rgba(164, 79, 255, 0.25);
+
+  transition: all 0.35s ease;
+}
+
+.edit-page textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+/* =========================
+   FOCUS (GLOW)
+========================= */
+
+.edit-page input:focus,
+.edit-page textarea:focus {
+  border-color: var(--pumpkin);
+  box-shadow:
+    0 0 18px var(--pumpkin),
+    0 0 28px var(--purple);
+}
+
+/* =========================
+   DATE INPUT DARK MODE
+========================= */
+
+.edit-page input[type="date"] {
+  color-scheme: dark;
+  letter-spacing: 1px;
+}
+
+/* =========================
+   SAVE BUTTON
+========================= */
+
+.edit-page button {
+  margin-top: 26px;
+  padding: 18px 0;
+  width: 100%;
+  max-width: 540px;
+
+  border-radius: 28px;
+  border: none;
+  cursor: pointer;
+
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: 4px;
+  color: #1a0c00;
+
+  background: linear-gradient(135deg, #ffdd55, #ff7f11);
+  box-shadow:
+    0 0 26px rgba(255, 127, 17, 0.9),
+    0 0 40px rgba(164, 79, 255, 0.6);
+
+  transition: all 0.35s ease;
+}
+
+/* =========================
+   BUTTON HOVER (SCARY 😈)
+========================= */
+
+.edit-page button:hover {
+  transform: scale(1.1) rotate(1deg);
+  box-shadow:
+    0 0 40px rgba(255, 127, 17, 1),
+    0 0 60px rgba(164, 79, 255, 0.9);
+}
+
+/* =========================
+   BUTTON ACTIVE
+========================= */
+
+.edit-page button:active {
+  transform: scale(0.96);
+}
+
+/* =========================
+   LOADING TEXT (MATCH THEME)
+========================= */
+
+.loading {
+  margin-top: 140px;
+  text-align: center;
+  font-size: 32px;
+  letter-spacing: 4px;
+  color: var(--pumpkin);
+  text-shadow:
+    0 0 14px var(--pumpkin),
+    0 0 30px var(--purple);
+}

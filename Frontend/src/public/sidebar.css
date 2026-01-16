@@ -1,0 +1,144 @@
+/* =========================
+   SIDEBAR WRAPPER
+========================= */
+
+.sidebar {
+  position: relative;
+  z-index: 120;
+}
+
+/* =========================
+   TOGGLE BUTTON (VISIBLE)
+========================= */
+
+.sidebar-toggle {
+  padding: 12px 18px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #ff8c00,
+    #ff4ecd,
+    #9b5cff
+  );
+  background-size: 300% 300%;
+  animation: neonFlow 6s ease infinite;
+
+  box-shadow:
+    0 0 12px rgba(255,140,0,0.7),
+    0 0 22px rgba(155,92,255,0.6);
+}
+
+.sidebar-toggle:hover {
+  transform: scale(1.06);
+}
+
+/* =========================
+   OPTIONS PANEL (FIXED)
+========================= */
+
+.sidebar-options {
+  position: absolute;
+  top: 58px;
+  left: 0;
+
+  width: 220px;
+  padding: 14px;
+
+  background: rgba(10, 0, 20, 0.95);
+  backdrop-filter: blur(18px);
+
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.15);
+
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+
+  z-index: 999;
+  box-shadow:
+    0 0 30px rgba(0,0,0,0.8),
+    0 0 40px rgba(155,92,255,0.6);
+}
+
+/* OPEN STATE */
+.sidebar.open .sidebar-options {
+  display: flex;
+  animation: sidebarDrop 0.35s ease;
+}
+
+/* =========================
+   OPTION BUTTONS (VISIBLE)
+========================= */
+
+.sidebar-options button {
+  width: 100%;
+  padding: 12px 14px;
+
+  border-radius: 14px;
+  border: none;
+
+  background: rgba(255,255,255,0.08);
+  color: #f5f5f5;
+
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* HOVER */
+.sidebar-options button:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255,140,0,0.25),
+    rgba(155,92,255,0.25)
+  );
+  color: #22ff88;
+  transform: translateX(4px);
+}
+
+/* ACTIVE */
+.sidebar-options button.active {
+  background: linear-gradient(
+    135deg,
+    #22ff88,
+    #9b5cff
+  );
+  color: #000;
+  font-weight: 800;
+
+  box-shadow:
+    0 0 15px rgba(34,255,136,0.8),
+    0 0 25px rgba(155,92,255,0.6);
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes neonFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes sidebarDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

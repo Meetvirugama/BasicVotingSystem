@@ -1,0 +1,106 @@
+/* =========================
+   FIXED HEADER WRAPPER
+========================= */
+
+.action-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  z-index: 500;
+
+  /* Combined height: Navbar + ActionBar */
+  background: linear-gradient(
+    to bottom,
+    rgba(12, 0, 24, 0.96),
+    rgba(18, 0, 32, 0.9),
+    rgba(18, 0, 32, 0.85)
+  );
+
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.85),
+    inset 0 -1px 0 rgba(255,140,0,0.15);
+}
+
+/* =========================
+   NAVBAR (INSIDE ACTIONBAR)
+   IMPORTANT: NOT FIXED
+========================= */
+
+.action-section .navbar {
+  position: static;   /* 🔴 VERY IMPORTANT */
+  height: var(--nav-h);
+}
+
+/* =========================
+   ACTION BAR ROW
+========================= */
+
+.action-bar {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  height: var(--action-h);
+}
+
+/* =========================
+   CREATE BUTTON
+========================= */
+
+.btn.create {
+  padding: 12px 22px;
+  border-radius: 16px;
+
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+
+  color: #fff;
+
+  background: linear-gradient(
+    135deg,
+    #ff8c00,
+    #ff4ecd,
+    #9b5cff
+  );
+  background-size: 300% 300%;
+  animation: neonFlow 6s ease infinite;
+
+  box-shadow:
+    0 0 18px rgba(255,140,0,0.7),
+    0 0 32px rgba(155,92,255,0.6);
+
+  transition: transform 0.3s ease;
+}
+
+.btn.create:hover {
+  transform: scale(1.08);
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes neonFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.page-content,
+.elections-page,
+.create-election-page,
+.profile {
+  margin-top: calc(var(--nav-h) + var(--action-h) + 20px);
+}
