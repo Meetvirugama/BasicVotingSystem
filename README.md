@@ -215,8 +215,11 @@ npm run dev
 ## 👨‍💻 Developer
 
 **Meet Virugama**
+
 Full Stack Developer
+
 Project: **BasicVotingSystem**
+
 
 ---
 
