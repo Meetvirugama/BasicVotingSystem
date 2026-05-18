@@ -1,113 +1,153 @@
 # 🗳️ CrowdPulse - Gamified Predictive Polls & Voting Platform
 
-**CrowdPulse** (BasicVotingSystem) is a high-performance, web3-style gamified prediction and community polling platform. Users can create, predict, and vote on competitive polls, complete targeted social tasks in the Task Center to earn virtual coin rewards, build their reputation, climb the leaderboard, and unlock custom tiers. 
+Welcome to **CrowdPulse** (BasicVotingSystem), an enterprise-grade, Web3-inspired gamified community polling and predictive voting platform. Designed with sleek neon glassmorphism, CrowdPulse allows users to voice opinions, participate in predictive forecasting, complete verification-backed community tasks for coin rewards, and climb dynamic local leaderboards.
 
-The entire system features a fully responsive, custom glassmorphic neon design system, role-based access controls, robust anti-fraud protection, and dual-mode database synchronization.
+This repository contains both the high-performance **Express.js API Backend** and the **React Vite SPA Frontend**.
 
 ---
 
-## 🏗️ Technical Architecture
+## 🏗️ Technical Architecture & Flow
 
-The platform is engineered using a decoupled Client-Server architecture designed to run on light edge containers:
+The system employs a decoupled, highly secure Client-Server architecture tailored for lightweight edge hosting (Vercel + Render) paired with a dual-stage database sync engine.
 
 ```mermaid
 graph TD
-    subgraph Client [Frontend - React Vite & Tailwind CSS]
-        UI[Glassmorphic UI Page Routing]
-        AuthCtx[Auth & Theme Context]
-        AxiosInstance[Axios Interceptors / Auth Token]
+    subgraph Client [Frontend - React Vite SPA]
+        UI[Glassmorphic UI View]
+        Context[Auth & Theme Context State]
+        AxiosInst[Axios Client with JWT Interceptor]
     end
 
-    subgraph Server [Backend - Express.js Server]
-        AuthMid[Auth & JWT Middleware]
-        FraudMid[Fraud & Cooldown Detectors]
-        Routes[API Gateways / Routes]
-        Controllers[Business Controllers]
+    subgraph Server [Backend - Express.js Node API]
+        Helmet[Helmet Security Gateway]
+        CORS[Dynamic CORS Multi-Origin Filter]
+        JWT[JWT Authentication Decoder]
+        Fraud[Time-Check Anti-Fraud Engine]
+        Routes[Express Router Map]
+        Ctrl[Business Logic Controllers]
     end
 
-    subgraph Storage [Database Engine Layer]
-        SQLite[(SQLite Development DB)]
-        Supabase[(Supabase PostgreSQL Pooler)]
+    subgraph Storage [Persistence Layer]
+        SQLite[(SQLite Local Database)]
+        Supabase[(Supabase PG Connection Pooler)]
     end
 
-    UI --> AuthCtx
-    AuthCtx --> AxiosInstance
-    AxiosInstance -- /api/auth, /api/polls, /api/tasks --> AuthMid
-    AuthMid --> FraudMid
-    FraudMid --> Routes
-    Routes --> Controllers
-    Controllers -- USE_DEMO_DB = true --> SQLite
-    Controllers -- USE_DEMO_DB = false --> Supabase
+    UI --> Context
+    Context --> AxiosInst
+    AxiosInst -- HTTPS + Bearer JWT Header --> Helmet
+    Helmet --> CORS
+    CORS --> JWT
+    JWT --> Fraud
+    Fraud --> Routes
+    Routes --> Ctrl
+    Ctrl -- USE_DEMO_DB = true --> SQLite
+    Ctrl -- USE_DEMO_DB = false --> Supabase
 ```
 
 ---
 
-## 🌟 Core Modules & Features
+## 🌟 Key Feature Modules
 
-### 🎮 Gamified Economy & Dashboard
-*   **Daily Check-in Reward**: Claim free coins every 24 hours with an active daily streak calculator.
-*   **Dynamic Quick Stats**: Real-time calculated dashboard widgets:
-    *   **Win Rate**: The actual success rate of completed predictions.
-    *   **Reputation**: Experience score earned through community participation.
-    *   **Polls Created**: The real number of polls published by the active user.
-    *   **Total Earned**: Dynamic transaction sum of all rewards.
-*   **Transaction Logs**: Complete dynamic audit history of all coin accruals (check-ins, voting rewards, task payouts).
+### 1. 📊 Gamified Economy & Interactive Dashboard
+*   **Daily Check-in Payout**: Claim a daily bonus of free virtual coins. The backend tracks your check-in history to maintain an active daily streak.
+*   **Real-time Statistics Widgets**:
+    *   **Win Rate**: Dynamically calculated percentage of your resolved predictions that matched the winning options.
+    *   **Reputation Score**: Build credentials through voting, creating polls, and completing tasks.
+    *   **Polls Created**: Dynamically counted polls you have published.
+    *   **Total Earned**: Dynamic aggregation of all transactions (check-ins, voting, tasks).
+*   **Dynamic Ledger Log**: Live transaction history showing exact coin sources and dynamic timestamp details.
 
-### 📝 Predictive Polls Engine
-*   **Create Polls**: Craft custom multi-option polls across Tech, Esports, YouTube, and Sports.
-*   **One-Vote Security**: Backend Sequelize transactions guarantee a single vote/prediction per user per poll.
-*   **Predictive Rewards**: Resolve polls to distribute proportional coin shares to voters of the winning option!
+### 2. 🗳️ Predictive Forecasting & Community Polls
+*   **Predictive Poll Creation**: Category-mapped polls (Esports, Tech, YouTube, Sports) with custom options, closing times, and reward pools.
+*   **Sequential Vote Guard**: Multi-row Sequelize transactions prevent race conditions, guaranteeing exactly one vote per user per poll.
+*   **Reward Distribution Engine**: Once an Admin resolves a poll with its actual outcome, the backend automatically distributes proportional reward shares to all users who predicted correctly!
 
-### 🛡️ Secure Task Verification Center
-*   **Task System**: Earn massive coin boosts by completing targeted social or community tasks.
-*   **Anti-Fraud Guard**: Security middleware verifying minimum time requirements (checking local server timestamps against client completion durations) to block automated submissions.
-*   **Category Filtering**: Quick filter tasks by Daily, Featured, Surveys, and Esports.
+### 3. 🛡️ Verification-Backed Task Center
+*   **Task List**: Custom campaigns where users can earn coins by viewing articles, verifying accounts, or completing surveys.
+*   **Time-Check Anti-Fraud Security**: When a user starts a task, the backend records the initial timestamp. When verifying, the middleware checks the elapsed time against `minimumTimeRequirement`. **Automated script submissions and instant clickers are immediately blocked.**
+*   **Category Splits**: Instantly filter tasks by Daily, Featured, Surveys, or Esports.
 
-### 🤖 AI Poll Autogenerator (Admin-Only)
-*   **Automated Poll Creation**: Admin dashboard leverage automated prompt models to construct and publish engaging, ready-to-vote polls in single click.
-
----
-
-## 🗄️ Dual-Mode Storage Architecture
-
-CrowdPulse features a dual-mode persistence layer, allowing frictionless offline local development and bulletproof production stability:
-
-1.  **Lightweight Development (Local SQLite)**
-    *   **Flag**: `USE_DEMO_DB=true`
-    *   **Engine**: SQLite via a local `./database.sqlite` file.
-    *   **Why**: Zero setup required. Allows starting the backend instantly offline.
-2.  **Enterprise Durability (Production Supabase PostgreSQL)**
-    *   **Flag**: `USE_DEMO_DB=false`
-    *   **Engine**: Supabase PostgreSQL with Connection Pooling (over port `6543`).
-    *   **Why**: Free Tier containers (like Render) have ephemeral disk storage which wipes SQLite on container rebuilds. Supabase PostgreSQL connection pooling guarantees your users, coins, votes, and streaks are **safely persisted forever**.
+### 🤖 4. AI-Powered Poll Autogenerator (Admin Panel)
+*   **One-Click AI Generation**: Admins can request Groq AI models to automatically draft and format complete, engaging, ready-to-publish polls with custom options and titles in a single click.
 
 ---
 
-## 🔑 Environment Variables Setup
+## 🗄️ Database Schema & Models
 
-Create a `.env` file inside the `Backend/` folder:
+CrowdPulse leverages **Sequelize ORM** to coordinate migrations and queries across both SQL systems. Below is a map of the core database tables:
+
+| Table Name | Primary Purpose | Key Fields |
+| :--- | :--- | :--- |
+| **`Users`** | Stores user identity, authentication hashes, and coin economy. | `id`, `name`, `email`, `coinBalance`, `reputationScore`, `level`, `lastCheckIn`, `checkInStreak` |
+| **`Polls`** | Holds community questions and closing times. | `id`, `title`, `description`, `category_id`, `creator_id`, `status` (open, closed, resolved), `winningOptionId` |
+| **`PollOptions`** | Interactive choices for each poll. | `id`, `poll_id`, `optionText`, `votesCount` |
+| **`Votes`** | Records user predictions and choices. | `id`, `user_id`, `poll_id`, `option_id`, `votedAt` |
+| **`Transactions`** | Financial ledger tracking coin history. | `id`, `user_id`, `amount`, `transactionType` (`check_in`, `task_reward`, `vote_reward`), `referenceId` |
+| **`Tasks`** | Task requirements and reward details. | `id`, `title`, `description`, `rewardCoins`, `minimumTimeRequirement`, `taskLink` |
+| **`UserTaskHistory`** | Tracks user task lifecycle status. | `id`, `user_id`, `task_id`, `status` (`started`, `completed`), `startedAt`, `completedAt` |
+
+---
+
+## 📡 Core API Gateway Reference
+
+All endpoints are prefixed with `/api` and require a bearer JWT header (`Authorization: Bearer <token>`) except authentication endpoints.
+
+### Authentication Module
+*   `POST /auth/register` $\rightarrow$ Register standard email/password accounts.
+*   `POST /auth/login` $\rightarrow$ Standard user login, returns JWT token.
+*   `POST /auth/google` $\rightarrow$ Exchange a Google OAuth Credential token for a secure local JWT.
+
+### Community Polls Module
+*   `GET /polls` $\rightarrow$ Retrieve all active, closed, or resolved polls.
+*   `GET /polls/:id` $\rightarrow$ Fetch detailed metrics, options, and live percentages for a specific poll.
+*   `POST /polls` $\rightarrow$ Publish a new community poll (Voter & Admin).
+*   `POST /polls/:id/vote` $\rightarrow$ Cast a prediction on a specific option.
+*   `POST /polls/:id/resolve` (Admin) $\rightarrow$ Declare the final winning option and distribute coin pools.
+
+### Task Verification Module
+*   `GET /tasks` $\rightarrow$ Get all tasks and categories along with the active user's progress.
+*   `POST /tasks/:id/start` $\rightarrow$ Record a starting timestamp for a task.
+*   `POST /tasks/:id/verify` $\rightarrow$ Run anti-fraud time check, reward user coins, and log the transaction.
+
+### Economy & Streaks Module
+*   `GET /economy/balance` $\rightarrow$ Get dynamic user stats, check-in history, coin balance, and active streaks.
+*   `POST /economy/check-in` $\rightarrow$ Verify and award daily check-in rewards.
+
+---
+
+## ⚙️ Detailed Environment Configuration
+
+Set up these keys in a `.env` file inside `Backend/`:
 
 ```env
-# Database Mode
-USE_DEMO_DB=true   # Set to false in production to connect Supabase
+# ──────────────────────────────────────────────────────────────────────────────
+# DATABASE CONFIGURATION
+# ──────────────────────────────────────────────────────────────────────────────
+USE_DEMO_DB=true                 # Set to 'true' for local SQLite, 'false' for production PostgreSQL
 
 # Supabase Production PostgreSQL Credentials (Only needed if USE_DEMO_DB=false)
 DB_HOST=aws-1-ap-southeast-2.pooler.supabase.com
 DB_PORT=6543
 DB_NAME=postgres
 DB_USER=postgres.wdymrbdtschkzrjgdvlo
-DB_PASSWORD=your_supabase_password
+DB_PASSWORD=rSRoawxCiz12qqFp
 
-# Authentication Secrets
-JWT_SECRET=your_jwt_signing_secret_here
-GOOGLE_CLIENT_ID=your_google_oauth_client_id.apps.googleusercontent.com
+# ──────────────────────────────────────────────────────────────────────────────
+# SECURITY & AUTHENTICATION
+# ──────────────────────────────────────────────────────────────────────────────
+JWT_SECRET=high-level-secure-voting-secret
+GOOGLE_CLIENT_ID=79151610115-r1fr7v2apoe8drbmdgksd3mmj43n68hs.apps.googleusercontent.com
 
-# External API Integrations (Optional)
-GROQ_API_KEY=gsk_your_groq_ai_generator_key
-EMAIL_USER=your_gmail_sender@gmail.com
-EMAIL_PASS=your_gmail_app_password
+# ──────────────────────────────────────────────────────────────────────────────
+# INTEGRATIONS & APIS (OPTIONAL)
+# ──────────────────────────────────────────────────────────────────────────────
+GROQ_API_KEY=gsk_your_groq_ai_model_key_here
+EMAIL_USER=meetvirugama4902@gmail.com
+EMAIL_PASS=qixzhzuwdmhjclby
 
-# CORS Settings
+# ──────────────────────────────────────────────────────────────────────────────
+# ROUTING & RUNTIME ENVIRONMENT
+# ──────────────────────────────────────────────────────────────────────────────
 FRONTEND_URL=http://localhost:5173
 PORT=5001
 NODE_ENV=development
@@ -115,54 +155,78 @@ NODE_ENV=development
 
 ---
 
-## 🚀 Running Locally (Step-by-Step)
+## 🚀 Step-by-Step Installation Guides
 
-### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) installed.
+### Option A: Frictionless Local Run (Recommended for Testing)
 
-### Step 1: Clone the Repository
-```bash
-git clone https://github.com/Meetvirugama/BasicVotingSystem.git
-cd BasicVotingSystem
-```
-
-### Step 2: Set Up and Run the Backend
-```bash
-cd Backend
-npm install
-
-# Run database migration and initial seed (creates tasks, categories, and test users)
-node seed.js
-
-# Start the local development server
-npm start
-```
-*The backend will be live on [http://localhost:5001](http://localhost:5001).*
-
-### Step 3: Set Up and Run the Frontend
-```bash
-cd ../Frontend
-npm install
-
-# Start the Vite development build
-npm run dev
-```
-*The frontend will open on [http://localhost:5173](http://localhost:5173).*
+1.  **Clone the Repo**:
+    ```bash
+    git clone https://github.com/Meetvirugama/BasicVotingSystem.git
+    cd BasicVotingSystem
+    ```
+2.  **Start and Seed the Backend**:
+    ```bash
+    cd Backend
+    npm install
+    
+    # Run the database migration and populate categories/tasks
+    node seed.js
+    
+    # Start the server locally
+    npm start
+    ```
+    *The API server will run on [http://localhost:5001](http://localhost:5001).*
+3.  **Launch the Frontend**:
+    ```bash
+    cd ../Frontend
+    npm install
+    
+    # Run the Vite server
+    npm run dev
+    ```
+    *Open [http://localhost:5173](http://localhost:5173) in your browser.*
 
 ---
 
-## 🎨 Design System & CSS
-*   **Pure Custom CSS**: Written without rigid component frameworks (no Tailwind or Bootstrap bottlenecks) for extreme design control.
-*   **Glassmorphism**: Elegant transparent cards, glowing neon borders, subtle transitions, and hover-triggered micro-animations.
-*   **Tailored Dark Mode**: Optimized color contrast, keeping text readable and layouts clean across all display sizes.
+### Option B: Cloud Production Deployment
+
+#### 🖥️ Frontend (Vercel)
+1. Link your repository to **Vercel**.
+2. Select the **`Frontend`** directory as your root directory.
+3. Configure the following **Environment Variables**:
+   * `VITE_API_URL` $\rightarrow$ `https://your-backend-service.onrender.com/api`
+   * `VITE_GOOGLE_CLIENT_ID` $\rightarrow$ `79151610115-r1fr7v2apoe8drbmdgksd3mmj43n68hs.apps.googleusercontent.com`
+4. Deploy!
+
+#### ⚙️ Backend (Render)
+1. Add a new **Web Service** on **Render**, linking your repository.
+2. Select **`Backend`** as the root directory.
+3. Choose the **Node** environment.
+4. Input your **Environment Variables** (matching the Supabase PostgreSQL connection details above):
+   * `USE_DEMO_DB` $\rightarrow$ `false`
+   * `DB_HOST` $\rightarrow$ `aws-1-ap-southeast-2.pooler.supabase.com`
+   * `DB_PORT` $\rightarrow$ `6543`
+   * `DB_NAME` $\rightarrow$ `postgres`
+   * `DB_USER` $\rightarrow$ `postgres.wdymrbdtschkzrjgdvlo`
+   * `DB_PASSWORD` $\rightarrow$ `rSRoawxCiz12qqFp`
+   * `FRONTEND_URL` $\rightarrow$ `https://your-frontend-domain.vercel.app`
+5. Click deploy!
 
 ---
 
-## 👨‍💻 Engineering Collaborators
+## 🎨 Design & Custom CSS System
+
+*   **SaaS Glassmorphism**: Cards feature deep translucent backgrounds, glowing high-contrast outline borders, and subtle layout transitions.
+*   **Tailored CSS**: Completely hand-written custom CSS styling, avoiding massive framework bottlenecks for optimal performance.
+*   **Fully Responsive**: Grid elements dynamically align, adapting layouts for all screen sizes from mobile devices to desktop displays.
+
+---
+
+## 👨‍💻 Engineering & Development Collaborators
 
 *   **Meet Virugama** — Creator & Lead Full Stack Developer.
 *   **Antigravity (Google DeepMind)** — Agentic AI Coding Assistant & Architect.
-    *   *Antigravity* built the secure task verification engine, dynamic dashboard statistics system, robust multi-origin CORS handling, dynamic database port routing, database migration/seeding workflows, and resolved all Render/Vercel deployment hurdles to deliver this premium product.
+    *   *Antigravity* built the secure time-check verification engine, dynamic dashboard statistics system, robust multi-origin CORS handling, dynamic database port routing, database migration/seeding workflows, and resolved all Render/Vercel deployment hurdles to deliver this premium product.
 
 ---
 ⭐ **Show Your Support**: If you love this project, give it a star!
