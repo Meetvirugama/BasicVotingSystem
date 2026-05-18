@@ -18,6 +18,7 @@ const sequelize = useDemoDb
       dbPassword,
       {
         host: process.env.DB_HOST,
+        port: process.env.DB_PORT || 5432,
         dialect: "postgres",
         logging: false,
         dialectOptions: process.env.DB_HOST === "localhost" ? {} : {
