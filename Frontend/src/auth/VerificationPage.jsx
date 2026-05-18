@@ -5,7 +5,7 @@ import { ShieldCheck, TrendingUp, Trophy } from "lucide-react";
 import Coin from "../components/Coin";
 
 const VerificationPage = () => {
-  const { googleLogin } = useAuth();
+  const { googleLogin, error } = useAuth();
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 transition-colors duration-300">
@@ -75,6 +75,12 @@ const VerificationPage = () => {
                 text="continue_with"
               />
             </div>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-center text-sm font-semibold animate-shake">
+                {error}
+              </div>
+            )}
             
             <div className="relative flex items-center py-5">
               <div className="flex-grow border-t border-slate-200 dark:border-dark-700"></div>
