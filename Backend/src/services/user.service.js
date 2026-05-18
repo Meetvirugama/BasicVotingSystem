@@ -2,7 +2,7 @@ import User from "../models/User.js";
 
 export async function getUserById(userId) {
   return User.findByPk(userId, {
-    attributes: ["id", "name", "email", "mobile", "age", "role"]
+    attributes: ["id", "name", "email", "role", "reputationScore", "level", "coinBalance", "checkInStreak", "lastCheckIn"]
   });
 }
 

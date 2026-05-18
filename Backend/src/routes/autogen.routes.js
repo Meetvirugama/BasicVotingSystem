@@ -8,11 +8,13 @@ import {
   rejectGeneratedPoll
 } from "../controllers/autogen.controller.js";
 import verifyBackendToken from "../middleware/auth.js";
+import adminOnly from "../middleware/adminOnly.js";
 
 const router = express.Router();
 
-// Apply authentication to protect admin autogen controls
+// Require both valid JWT AND admin role for all autogen routes
 router.use(verifyBackendToken);
+router.use(adminOnly);
 
 router.get("/settings", getGeneratorSettings);
 router.post("/settings", updateGeneratorSettings);
