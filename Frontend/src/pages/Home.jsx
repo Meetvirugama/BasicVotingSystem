@@ -200,10 +200,10 @@ const Home = () => {
       {/* Quick Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
-          { label: "Win Rate", value: "68%", icon: Target, color: "text-success", bg: "bg-success/10" },
-          { label: "Reputation", value: user?.reputationScore || "500", icon: Trophy, color: "text-warning", bg: "bg-warning/10" },
-          { label: "Polls Created", value: "3", icon: PlusCircle, color: "text-primary", bg: "bg-primary/10" },
-          { label: "Total Earned", value: "+1450", icon: ShieldCheck, color: "text-secondary", bg: "bg-secondary/10" },
+          { label: "Win Rate", value: user?.stats?.winRate || "0%", icon: Target, color: "text-success", bg: "bg-success/10" },
+          { label: "Reputation", value: user?.reputationScore !== undefined ? user.reputationScore.toString() : "0", icon: Trophy, color: "text-warning", bg: "bg-warning/10" },
+          { label: "Polls Created", value: user?.stats?.pollsCreated || "0", icon: PlusCircle, color: "text-primary", bg: "bg-primary/10" },
+          { label: "Total Earned", value: user?.stats?.totalEarned || "+0", icon: ShieldCheck, color: "text-secondary", bg: "bg-secondary/10" },
         ].map((stat, i) => (
           <motion.div 
             key={i} 

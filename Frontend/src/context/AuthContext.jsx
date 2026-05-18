@@ -29,6 +29,7 @@ export const AuthProvider = ({ children }) => {
           reputationScore: balanceData.reputationScore,
           lastCheckIn:     balanceData.lastCheckIn,
           checkInStreak:   balanceData.checkInStreak,
+          stats:           balanceData.stats,
           username:        profileData.name || prev?.username
         }));
       }

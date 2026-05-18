@@ -1,10 +1,55 @@
 import User from "../models/User.js";
 import Transaction from "../models/Transaction.js";
+import Poll from "../models/Poll.js";
+import Vote from "../models/Vote.js";
+import { Op } from "sequelize";
+import sequelize from "../db.js";
 
 export const getBalance = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.userId);
     if (!user) return res.status(404).json({ success: false, error: "User not found" });
+
+    // Calculate dynamic stats
+    const pollsCreatedCount = await Poll.count({ where: { creator_id: req.user.userId } });
+    
+    const sumResult = await Transaction.sum('amount', { 
+      where: { 
+        user_id: req.user.userId,
+        amount: { [Op.gt]: 0 }
+      } 
+    });
+    const totalEarnedVal = sumResult ? parseFloat(sumResult) : 0;
+
+    const totalVotesCount = await Vote.count({ where: { user_id: req.user.userId } });
+
+    // Calculate dynamic Win Rate based on resolved predictions
+    const resolvedVotesCount = await Vote.count({
+      include: [{
+        model: Poll,
+        required: true,
+        where: { status: 'resolved' }
+      }],
+      where: { user_id: req.user.userId }
+    });
+
+    let winRatePercentage = 0;
+    if (resolvedVotesCount > 0) {
+      const correctVotesCount = await Vote.count({
+        include: [{
+          model: Poll,
+          required: true,
+          where: { 
+            status: 'resolved',
+            winningOptionId: sequelize.col('Vote.option_id')
+          }
+        }],
+        where: { user_id: req.user.userId }
+      });
+      winRatePercentage = Math.round((correctVotesCount / resolvedVotesCount) * 100);
+    } else {
+      winRatePercentage = totalVotesCount > 0 ? 100 : 0; // Default placeholder
+    }
 
     res.json({ 
       success: true, 
@@ -12,7 +57,12 @@ export const getBalance = async (req, res) => {
       level: user.level, 
       reputationScore: user.reputationScore,
       lastCheckIn: user.lastCheckIn,
-      checkInStreak: user.checkInStreak
+      checkInStreak: user.checkInStreak,
+      stats: {
+        winRate: `${winRatePercentage}%`,
+        pollsCreated: pollsCreatedCount.toString(),
+        totalEarned: `+${totalEarnedVal}`
+      }
     });
   } catch (err) {
     console.error("GET BALANCE ERROR:", err);
