@@ -44,24 +44,39 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem(TOKEN_KEY);
       if (!token) { setLoading(false); return; }
 
+      // Step 1: Decode JWT. If it fails or is expired, clear and stop.
+      let payload;
       try {
-        // Decode payload to pre-populate state instantly (no round-trip wait)
-        const payload = JSON.parse(atob(token.split(".")[1]));
+        payload = JSON.parse(atob(token.split(".")[1]));
         if (payload.exp * 1000 < Date.now()) {
           clearToken();
           setLoading(false);
           return;
         }
-        setUser({ id: payload.userId, email: payload.email, role: payload.role });
+      } catch {
+        // Malformed token — clear it
+        clearToken();
+        setLoading(false);
+        return;
+      }
+
+      // Step 2: Restore basic session immediately from token so user is never
+      // shown as a guest while the network request is in-flight.
+      setUser({ id: payload.userId, email: payload.email, role: payload.role, username: payload.email });
+
+      // Step 3: Fetch full profile. If this fails (e.g. Render cold start),
+      // the user stays logged in with basic data. Do NOT clear the token.
+      try {
         await fetchUserProfile();
       } catch {
-        clearToken();
+        console.warn("Profile fetch failed on boot — keeping session alive.");
       } finally {
         setLoading(false);
       }
     };
     bootstrap();
   }, [fetchUserProfile]);
+
 
   // ── Auth Actions ───────────────────────────────────────────────────────────
   const login = async (email, password) => {
