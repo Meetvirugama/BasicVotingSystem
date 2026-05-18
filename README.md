@@ -80,19 +80,17 @@ Each role has different permissions enforced on both the frontend and backend.
 
 ---
 
-## 🗄️ Database
+## 🗄️ Database & Storage Architecture
 
-* **PostgreSQL** is used as the primary database
-* Stores:
+**BasicVotingSystem** utilizes a highly robust, dual-mode database architecture that offers both friction-free local development and stable production durability:
 
-  * Users
-  * Elections
-  * Votes
-* Enforces:
-
-  * One vote per user per election
-  * Relational integrity
-  * Secure vote aggregation
+*   **Local Development (SQLite)**: 
+    *   By default (`USE_DEMO_DB=true`), the system utilizes a plug-and-play, local **SQLite** database (`database.sqlite`). 
+    *   Allows immediate development and testing out-of-the-box with no setup required.
+*   **Production Deployment (Supabase PostgreSQL)**:
+    *   When set to production (`USE_DEMO_DB=false`), the backend connects securely to your cloud-hosted **Supabase PostgreSQL** instance.
+    *   Utilizes the secure **Supabase Connection Pooler** (over port `6543` with Transaction mode) to ensure highly scalable, permanent, and resilient data storage.
+    *   Guarantees that user profiles, coin balances, daily streaks, and completed tasks remain permanently intact even when Render servers restart or spin down.
 
 ---
 
@@ -212,13 +210,11 @@ npm run dev
 
 ---
 
-## 👨‍💻 Developer
+## 👨‍💻 Developer & AI Collaborator
 
-**Meet Virugama**
-
-Full Stack Developer
-
-Project: **BasicVotingSystem**
+*   **Meet Virugama** — Creator & Lead Full Stack Developer
+*   **Antigravity (Google DeepMind)** — Agentic AI Coding Assistant & Architect
+    *   *Antigravity* built the secure task verification engine, dynamic dashboard statistics system (fetching real-time win rates, polls created, and earnings), robust multi-origin CORS handling, dynamic database port routing, and resolved all Render/Vercel deployment hurdles to deliver a premium, production-ready product.
 
 
 ---
