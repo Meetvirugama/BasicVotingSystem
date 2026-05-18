@@ -31,7 +31,7 @@ const sequelize = useDemoDb
 
 try {
   await sequelize.authenticate();
-  console.log("✅ Production Database Connected (PostgreSQL)");
+  console.log(useDemoDb ? "✅ Local Database Connected (SQLite)" : "✅ Production Database Connected (PostgreSQL)");
 } catch (error) {
   console.error("❌ Database Connection Failed:", error);
 }
