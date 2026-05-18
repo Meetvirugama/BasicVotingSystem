@@ -1,7 +1,11 @@
 import axios from "axios";
 
+// In production (Vercel), VITE_API_URL must be set to the Render backend URL.
+// The fallback below ensures local development still works out of the box.
+const BASE_URL = import.meta.env.VITE_API_URL || "https://basicvotingsystem.onrender.com/api";
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5001/api",
+  baseURL: BASE_URL,
   withCredentials: true
 });
 

@@ -4,5 +4,15 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "env": {
+    "VITE_API_URL": "https://basicvotingsystem.onrender.com/api",
+    "VITE_GOOGLE_CLIENT_ID": "79151610115-r1fr7v2apoe8drbmdgksd3mmj43n68hs.apps.googleusercontent.com"
+  },
+  "build": {
+    "env": {
+      "VITE_API_URL": "https://basicvotingsystem.onrender.com/api",
+      "VITE_GOOGLE_CLIENT_ID": "79151610115-r1fr7v2apoe8drbmdgksd3mmj43n68hs.apps.googleusercontent.com"
+    }
+  }
 }
