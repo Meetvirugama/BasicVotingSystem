@@ -1,0 +1,185 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* 🚀 WELCOME BANNER */
+.welcome-banner {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  border-radius: var(--radius-md);
+  padding: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.welcome-banner::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.banner-text h2 { font-size: 1.75rem; margin: 0 0 8px; font-weight: 800; }
+.banner-text p { opacity: 0.9; margin-bottom: 24px; font-weight: 500; }
+
+.banner-btn {
+  background: white;
+  color: var(--primary);
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.banner-btn:hover { transform: translateY(-2px); }
+
+.banner-img { font-size: 4rem; opacity: 0.2; transform: rotate(15deg); }
+
+/* 📊 QUICK STATS */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.25rem;
+}
+
+.stat-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin: 0; }
+.stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin: 4px 0 0; }
+
+/* 🏗️ DASHBOARD GRID */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+.dashboard-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.card-header h3 { font-size: 1.125rem; font-weight: 800; margin: 0; }
+.card-header a { font-size: 0.75rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+
+/* 🗳️ MINI LIST */
+.election-mini-list { display: flex; flex-direction: column; gap: 16px; }
+
+.election-mini-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-main);
+  transition: all 0.2s;
+}
+
+.election-mini-item:hover { background-color: var(--primary-soft); }
+
+.item-info { flex-grow: 1; }
+.item-title { font-size: 0.875rem; font-weight: 700; margin: 0; }
+.item-desc { font-size: 0.75rem; color: var(--text-muted); margin: 4px 0 0; }
+
+.item-status { font-size: 0.625rem; font-weight: 800; padding: 4px 8px; border-radius: 4px; }
+.item-status.active { background-color: #f0fdf4; color: var(--success); }
+.item-status.closed { background-color: #fef2f2; color: var(--danger); }
+
+.item-action { color: var(--text-muted); }
+
+/* 👤 PROFILE SUMMARY */
+.profile-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.summary-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 16px rgba(124, 58, 237, 0.2);
+}
+
+.summary-name { font-size: 1rem; font-weight: 800; margin: 0; }
+.summary-email { font-size: 0.75rem; color: var(--text-muted); margin: 4px 0 16px; }
+
+.summary-badge {
+  font-size: 0.625rem;
+  font-weight: 800;
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+}
+
+.summary-link {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  transition: all 0.2s;
+}
+
+.summary-link:hover { background-color: var(--border); }

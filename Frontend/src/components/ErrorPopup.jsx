@@ -6,7 +6,7 @@ export default function ErrorPopup({ message, onClose }) {
   return (
     <div className="error-overlay">
       <div className="error-card">
-        <h3>⚠️ Error</h3>
+        <h3>System Message</h3>
         <p>{message}</p>
 
         {/* 👇 Footer credit */}

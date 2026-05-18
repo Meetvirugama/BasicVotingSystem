@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import ErrorPopup from "./ErrorPopup";
 import "../public/editelection.css";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function EditElection() {
   const { id } = useParams();
@@ -16,6 +17,7 @@ export default function EditElection() {
     tags: ""
   });
 
+  const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -35,6 +37,7 @@ export default function EditElection() {
           end_date: e.end_date?.slice(0, 10) || "",
           tags: e.tags?.join(", ") || ""
         });
+        setCandidates(e.candidates || []);
       } catch (err) {
         setError("Election not found or you don't have access");
       } finally {
@@ -46,12 +49,33 @@ export default function EditElection() {
   }, [id]);
 
   /* ===========================
+     CANDIDATE HELPERS
+  ============================ */
+  const handleCandidateChange = (id, name) => {
+    setCandidates(prev => prev.map(c => c.id === id ? { ...c, name } : c));
+  };
+
+  const addCandidate = () => {
+    setCandidates([...candidates, { id: uuidv4(), name: "", votes: 0 }]);
+  };
+
+  const removeCandidate = (id) => {
+    if (candidates.length <= 2) return;
+    setCandidates(candidates.filter(c => c.id !== id));
+  };
+
+  /* ===========================
      SAVE UPDATE
   ============================ */
   const save = async () => {
+    if (candidates.some(c => !c.name.trim())) {
+      return setError("All candidates must have a name.");
+    }
+
     try {
       await api.put(`/election/${id}`, {
         ...form,
+        candidates,
         tags: form.tags
           .split(",")
           .map((t) => t.trim())
@@ -64,74 +88,80 @@ export default function EditElection() {
     }
   };
 
-  /* ===========================
-     LOADING
-  ============================ */
-  if (loading) {
-    return <div className="loading">Loading election…</div>;
-  }
+  if (loading) return <div className="loading">Retrieving poll configuration…</div>;
 
-  /* ===========================
-     UI
-  ============================ */
   return (
     <>
       <div className="edit-page">
-        <h2>✏️ Edit Election</h2>
+        <h2>Update Voting Poll</h2>
 
+        <label className="form-label">Poll Title</label>
         <input
           value={form.title}
-          onChange={(e) =>
-            setForm({ ...form, title: e.target.value })
-          }
-          placeholder="Election Title"
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          placeholder="Poll Title"
         />
 
+        <label className="form-label">Description</label>
         <textarea
           value={form.description}
-          onChange={(e) =>
-            setForm({ ...form, description: e.target.value })
-          }
-          placeholder="Election Description"
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+          placeholder="Poll Description"
         />
 
-        <input
-          type="date"
-          value={form.start_date}
-          onChange={(e) =>
-            setForm({ ...form, start_date: e.target.value })
-          }
-        />
+        <div style={{ display: 'flex', gap: '16px' }}>
+          <div style={{ flex: 1 }}>
+            <label className="form-label">Start Date</label>
+            <input type="date" value={form.start_date} onChange={(e) => setForm({ ...form, start_date: e.target.value })} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label className="form-label">End Date</label>
+            <input type="date" value={form.end_date} onChange={(e) => setForm({ ...form, end_date: e.target.value })} />
+          </div>
+        </div>
 
-        <input
-          type="date"
-          value={form.end_date}
-          onChange={(e) =>
-            setForm({ ...form, end_date: e.target.value })
-          }
-        />
+        {/* CANDIDATES EDIT */}
+        <div style={{ marginTop: '24px', marginBottom: '24px' }}>
+          <label className="form-label">Candidates / Options</label>
+          {candidates.map((c, index) => (
+            <div key={c.id} style={{ display: 'flex', gap: '12px', marginBottom: '12px', alignItems: 'center' }}>
+               <input
+                style={{ marginBottom: '0' }}
+                placeholder={`Candidate ${index + 1}`}
+                value={c.name}
+                onChange={(e) => handleCandidateChange(c.id, e.target.value)}
+              />
+              {candidates.length > 2 && (
+                <button 
+                  onClick={() => removeCandidate(c.id)}
+                  style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer' }}
+                >
+                  <i className="fas fa-trash"></i>
+                </button>
+              )}
+            </div>
+          ))}
+          <button onClick={addCandidate} className="btn-secondary" style={{ fontSize: '0.75rem', padding: '4px 12px' }}>
+             <i className="fas fa-plus"></i> Add Option
+          </button>
+        </div>
 
+        <label className="form-label">Tags (comma separated)</label>
         <input
           value={form.tags}
-          onChange={(e) =>
-            setForm({ ...form, tags: e.target.value })
-          }
-          placeholder="tags (comma separated)"
+          onChange={(e) => setForm({ ...form, tags: e.target.value })}
+          placeholder="Category tags"
         />
 
-        <button onClick={save}>💾 Save Changes</button>
+        <button onClick={save} className="btn-primary" style={{ marginTop: '24px', width: '100%' }}>
+          Update Secure Session
+        </button>
       </div>
 
-      {/* 🔥 Error Popup */}
-      <ErrorPopup
-        message={error}
-        onClose={() => {
-          setError("");
-          if (error.includes("not found")) {
-            navigate("/upcoming");
-          }
-        }}
-      />
+      <ErrorPopup message={error} onClose={() => {
+        setError("");
+        if (error.includes("not found")) navigate("/upcoming");
+      }}/>
     </>
   );
 }

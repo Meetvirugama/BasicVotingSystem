@@ -36,6 +36,15 @@ export async function deleteElection(req, res) {
   }
 }
 
+export async function close(req, res) {
+  try {
+    const election = await electionService.closeElection(req);
+    res.json(election);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message });
+  }
+}
+
 export async function getOne(req, res) {
   try {
     const election = await electionService.getElectionById(req);

@@ -7,27 +7,18 @@ const Vote = sequelize.define("Vote", {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
-  user_id: {
-    type: DataTypes.UUID,
+  stakeAmount: {
+    type: DataTypes.DECIMAL(18, 2),
     allowNull: false
   },
-  election_id: {
-    type: DataTypes.UUID,
-    allowNull: false
-  },
-  team: {
-    type: DataTypes.ENUM("A", "B"),
+  lockedOdds: {
+    type: DataTypes.DECIMAL(6, 4),
     allowNull: false
   }
 }, {
   tableName: "votes",
   timestamps: true,
-  indexes: [
-    {
-      unique: true,
-      fields: ["user_id", "election_id"]
-    }
-  ]
+  updatedAt: false // Votes are immutable
 });
 
 export default Vote;

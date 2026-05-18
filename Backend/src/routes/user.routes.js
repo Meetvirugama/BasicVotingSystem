@@ -1,9 +1,15 @@
-import { Router } from "express";
+import express from "express";
+import { getProfile, getLeaderboard, updateProfile } from "../controllers/user.controller.js";
 import verifyBackendToken from "../middleware/auth.js";
-import { getProfile , updateProfile } from "../controllers/user.controller.js";
 
-const router = Router();
-router.get("/profile", verifyBackendToken, getProfile);
-router.put("/profile", verifyBackendToken, updateProfile);
+const router = express.Router();
+
+// Public route for leaderboard
+router.get("/leaderboard", getLeaderboard);
+
+// Protected routes
+router.use(verifyBackendToken);
+router.get("/profile", getProfile);
+router.put("/profile", updateProfile);
 
 export default router;

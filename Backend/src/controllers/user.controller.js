@@ -1,3 +1,4 @@
+import User from "../models/User.js";
 import * as userService from "../services/user.service.js";
 
 export async function getProfile(req, res) {
@@ -32,3 +33,23 @@ export async function updateProfile(req, res) {
     res.status(500).json({ error: "Database update failed" });
   }
 }
+
+export const getLeaderboard = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: ['id', 'name', 'reputationScore', 'level', 'coinBalance'],
+      order: [['reputationScore', 'DESC']],
+      limit: 50
+    });
+    // map name to username for frontend compatibility
+    const mapped = users.map(u => ({
+      ...u.toJSON(),
+      username: u.name
+    }));
+    res.json({ success: true, leaderboard: mapped });
+  } catch (err) {
+    console.error("GET LEADERBOARD ERROR:", err);
+    res.status(500).json({ success: false, error: "Server error fetching leaderboard" });
+  }
+};
+

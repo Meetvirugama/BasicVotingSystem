@@ -1,232 +1,95 @@
-import React, { useState, useEffect } from "react";
-import {
-  MDBContainer,
-  MDBBtn,
-  MDBInput,
-  MDBCheckbox
-} from "mdb-react-ui-kit";
+import React from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import { useAuth } from "../context/AuthContext";
+import { ShieldCheck, TrendingUp, Trophy } from "lucide-react";
+import Coin from "../components/Coin";
 
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendEmailVerification,
-  sendPasswordResetEmail
-} from "firebase/auth";
-
-import { auth } from "./firebase";
-import { useNavigate } from "react-router-dom";
-import publicApi from "../services/publicApi";
-import ErrorPopup from "../components/ErrorPopup";
-import "./verify.css";
-
-export default function Verify() {
-  const [mode, setMode] = useState(null);
-  const [portalOpen, setPortalOpen] = useState(false);
-
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-
-  const [forgotMode, setForgotMode] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState("");
-
-  const [regEmail, setRegEmail] = useState("");
-  const [regPassword, setRegPassword] = useState("");
-
-  const [theme, setTheme] = useState("light");
-  const [error, setError] = useState("");
-
-  const navigate = useNavigate();
-
-  /* 🔊 Optional ambience */
-  useEffect(() => {
-    const thunder = document.getElementById("thunder");
-    const whisper = document.getElementById("whisper");
-    if (thunder) thunder.volume = 0.5;
-    if (whisper) whisper.volume = 0.2;
-  }, []);
-
-  /* 🔐 LOGIN */
-  const handleLogin = async () => {
-    if (!loginEmail || !loginPassword) {
-      return setError("Enter email and password");
-    }
-
-    setPortalOpen(true);
-
-    setTimeout(async () => {
-      try {
-        const res = await signInWithEmailAndPassword(
-          auth,
-          loginEmail,
-          loginPassword
-        );
-
-        await res.user.reload();
-
-        if (!res.user.emailVerified) {
-          setPortalOpen(false);
-          return setError("Please verify your email first");
-        }
-
-        const token = await res.user.getIdToken(true);
-        const backendRes = await publicApi.post("/auth/login", { token });
-
-        localStorage.setItem("token", backendRes.data.token);
-        navigate("/");
-      } catch {
-        setPortalOpen(false);
-        setError("Login failed");
-      }
-    }, 1800);
-  };
-
-  /* 🔁 FORGOT PASSWORD */
-  const handleForgotPassword = async () => {
-    if (!forgotEmail) return setError("Enter registered email");
-
-    try {
-      await sendPasswordResetEmail(auth, forgotEmail);
-      setError("Password reset email sent");
-      setForgotMode(false);
-    } catch {
-      setError("Password reset failed");
-    }
-  };
-
-  /* 🧛 REGISTER */
-  const handleRegister = async () => {
-    if (!regEmail || !regPassword) {
-      return setError("Enter email and password");
-    }
-
-    try {
-      const res = await createUserWithEmailAndPassword(
-        auth,
-        regEmail,
-        regPassword
-      );
-
-      await sendEmailVerification(res.user);
-
-      const token = await res.user.getIdToken(true);
-      await publicApi.post("/auth/login", { email: regEmail, token });
-
-      setError("Verification email sent. Verify before login.");
-      setMode("login");
-    } catch (err) {
-      setError(err.message || "Registration failed");
-    }
-  };
+const VerificationPage = () => {
+  const { googleLogin } = useAuth();
 
   return (
-    <>
-      <div className="scene-root" data-theme={theme}>
+    <div className="min-h-screen flex flex-col md:flex-row bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 transition-colors duration-300">
+      
+      {/* Left Column: Branding / Illustration */}
+      <div className="md:flex-1 bg-gradient-to-br from-primary to-secondary p-10 md:p-20 flex flex-col justify-between relative overflow-hidden">
+        {/* Abstract Background Shapes */}
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-black/10 rounded-full blur-3xl"></div>
 
-        {/* 🎃 LOADER */}
-        {portalOpen && (
-          <div className="pumpkin-loader">
-            <div className="pumpkin">
-              <div className="stem"></div>
-              <div className="rib r1"></div>
-              <div className="rib r2"></div>
-              <div className="rib r3"></div>
-              <div className="rib r4"></div>
-              <div className="face">
-                <div className="eye left"></div>
-                <div className="eye right"></div>
-                <div className="nose"></div>
-                <div className="mouth">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-16">
+            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center font-display font-black text-primary text-xl shadow-xl">
+              CP
             </div>
+            <span className="text-3xl font-display font-black text-white tracking-tight">CrowdPulse</span>
           </div>
-        )}
 
-        {/* OPTIONAL AUDIO */}
-        <audio id="thunder" src="/sounds/thunder.mp3" />
-        <audio id="whisper" src="/sounds/whisper.mp3" />
+          <h1 className="text-4xl md:text-6xl font-display font-black text-white leading-tight mb-6">
+            Predict.<br />Earn.<br />Compete.
+          </h1>
+          <p className="text-white/80 font-medium text-lg max-w-md leading-relaxed">
+            Join the ultimate virtual economy. Complete tasks to earn coins, predict outcomes of live events, and climb the global leaderboards.
+          </p>
+        </div>
 
-        {/* 🩸 CARD */}
-        <MDBContainer className="horror-card">
-
-          {/* 🌗 THEME TOGGLE */}
-          <button
-            onClick={() =>
-              setTheme(theme === "light" ? "dark" : "light")
-            }
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "1.1rem",
-              marginBottom: "12px"
-            }}
-          >
-            {theme === "light" ? "🌗 Dark Mode" : "🌕 Light Mode"}
-          </button>
-
-          <h1 className="title-main">WELCOME TO</h1>
-          <h1 className="title-glow">VOTING WORLD</h1>
-          <p className="creator">Developed by Meet Virugama</p>
-
-          {/* ENTRY */}
-          {mode === null && (
-            <>
-              <MDBBtn className="btn-dark" onClick={() => setMode("login")}>
-                Enter
-              </MDBBtn>
-              <MDBBtn className="btn-dark alt" onClick={() => setMode("register")}>
-                Register
-              </MDBBtn>
-            </>
-          )}
-
-          {/* LOGIN */}
-          {mode === "login" && !forgotMode && (
-            <>
-              <MDBInput label="Email" onChange={e => setLoginEmail(e.target.value)} />
-              <MDBInput label="Password" type="password" onChange={e => setLoginPassword(e.target.value)} />
-              <MDBBtn className="btn-dark" onClick={handleLogin}>
-                Open Portal
-              </MDBBtn>
-              <p className="forgot-link" onClick={() => setForgotMode(true)}>
-                Forgot Password?
-              </p>
-            </>
-          )}
-
-          {/* FORGOT */}
-          {mode === "login" && forgotMode && (
-            <>
-              <MDBInput label="Registered Email" onChange={e => setForgotEmail(e.target.value)} />
-              <MDBBtn className="btn-dark alt" onClick={handleForgotPassword}>
-                Send Reset Spell
-              </MDBBtn>
-              <p className="forgot-link" onClick={() => setForgotMode(false)}>
-                ← Back
-              </p>
-            </>
-          )}
-
-          {/* REGISTER */}
-          {mode === "register" && (
-            <>
-              <MDBInput label="Email" onChange={e => setRegEmail(e.target.value)} />
-              <MDBInput label="Password" type="password" onChange={e => setRegPassword(e.target.value)} />
-              <MDBCheckbox label="I swear to vote honestly" />
-              <MDBBtn className="btn-dark alt" onClick={handleRegister}>
-                Bind My Vote
-              </MDBBtn>
-            </>
-          )}
-        </MDBContainer>
+        <div className="relative z-10 hidden md:flex gap-4">
+          <div className="bg-black/20 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex items-center gap-3">
+            <TrendingUp className="text-success w-6 h-6" />
+            <span className="text-white font-bold text-sm">Live Odds</span>
+          </div>
+          <div className="bg-black/20 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex items-center gap-3">
+            <Trophy className="text-warning w-6 h-6" />
+            <span className="text-white font-bold text-sm">Leaderboards</span>
+          </div>
+          <div className="bg-black/20 backdrop-blur-md p-4 rounded-2xl border border-white/10 flex items-center gap-3">
+            <ShieldCheck className="text-primary-light w-6 h-6" />
+            <span className="text-white font-bold text-sm">Fair Play Engine</span>
+          </div>
+        </div>
       </div>
 
-      {/* 🔥 GLOBAL ERROR POPUP */}
-      <ErrorPopup message={error} onClose={() => setError("")} />
-    </>
+      {/* Right Column: Auth Form */}
+      <div className="md:flex-1 flex flex-col justify-center items-center p-10 relative bg-white dark:bg-dark-800">
+        <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-8 duration-700">
+          
+          <div className="text-center mb-10">
+            <div className="flex justify-center mb-6">
+              <div className="relative">
+                <Coin size="xl" className="animate-bounce" />
+                <div className="absolute -inset-4 bg-warning/20 rounded-full blur-xl -z-10"></div>
+              </div>
+            </div>
+            <h2 className="text-3xl font-display font-black text-slate-900 dark:text-white mb-2">Welcome to the Market</h2>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">Sign in to claim your daily reward.</p>
+          </div>
+
+          <div className="bg-slate-50 dark:bg-dark-900 border border-slate-200 dark:border-dark-700 rounded-3xl p-8 shadow-2xl shadow-slate-200/40 dark:shadow-none">
+            <div className="flex justify-center mb-6">
+              <GoogleLogin
+                onSuccess={googleLogin}
+                onError={() => console.log("Login Failed")}
+                useOneTap
+                theme="filled_black"
+                shape="pill"
+                size="large"
+                text="continue_with"
+              />
+            </div>
+            
+            <div className="relative flex items-center py-5">
+              <div className="flex-grow border-t border-slate-200 dark:border-dark-700"></div>
+              <span className="flex-shrink-0 mx-4 text-slate-400 text-xs font-bold uppercase tracking-wider">Secure Access Only</span>
+              <div className="flex-grow border-t border-slate-200 dark:border-dark-700"></div>
+            </div>
+
+            <p className="text-center text-xs text-slate-500 dark:text-slate-400 mt-4 leading-relaxed font-medium">
+              By continuing, you agree to our <a href="#" className="text-primary hover:underline">Terms of Service</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>. This is a virtual economy platform.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default VerificationPage;

@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../db.js";
 
+const isSqlite = sequelize.getDialect() === 'sqlite';
+
 const Election = sequelize.define("Election", {
   id: {
     type: DataTypes.UUID,
@@ -13,28 +15,13 @@ const Election = sequelize.define("Election", {
     allowNull: false
   },
 
-  TeamA: {
-    type: DataTypes.STRING,
+  /* 🗳️ DYNAMIC CANDIDATES 
+     SQLite uses JSON (stored as TEXT), Postgres uses JSONB
+  */
+  candidates: {
+    type: isSqlite ? DataTypes.JSON : DataTypes.JSONB,
     allowNull: false,
-    field: "team_a"
-  },
-
-  TeamB: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    field: "team_b"
-  },
-
-  CA: {
-  type: DataTypes.INTEGER,
-  allowNull: false,
-  defaultValue: 0
-  },
-
-  CB: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
+    defaultValue: []
   },
 
   description: {
@@ -53,17 +40,17 @@ const Election = sequelize.define("Election", {
   },
 
   tags: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
+    type: isSqlite ? DataTypes.JSON : DataTypes.ARRAY(DataTypes.STRING),
     defaultValue: []
   },
 
   status: {
-    type: DataTypes.ENUM("draft", "active", "closed"),
+    type: isSqlite ? DataTypes.STRING : DataTypes.ENUM("draft", "active", "closed"),
     defaultValue: "active"
   },
 
   created_by: {
-    type: DataTypes.UUID,
+    type: DataTypes.STRING, // Store Clerk ID (String)
     allowNull: false
   }
 

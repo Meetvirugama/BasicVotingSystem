@@ -1,194 +1,81 @@
-import { useEffect, useMemo, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import api from "../services/api";
 import "../public/prevEle.css";
-import Navbar from "./Navbar";
-import ActionBar from "./ActionBar";
 import ResultBar from "./ResultBar";
-import { AuthContext } from "../context/AuthContext";
 import ErrorPopup from "./ErrorPopup";
 
-export default function PreviousElections() {
+export default function ResultsHub() {
   const [elections, setElections] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [sortType, setSortType] = useState("DEFAULT");
   const [error, setError] = useState("");
 
-  const { user } = useContext(AuthContext); // admin | voter
-
-  /* ===========================
-     LOAD PREVIOUS ELECTIONS
-  ============================ */
   useEffect(() => {
-    const loadElections = async () => {
+    const load = async () => {
       try {
         const res = await api.get("/election");
-
         const now = new Date();
-
-        // PREVIOUS = closed OR time passed
-        const previous = res.data.filter(
-          (e) =>
-            e.status === "closed" ||
-            new Date(e.end_date) < now
-        );
-
-        setElections(previous);
-      } catch (err) {
-        console.error("LOAD PREVIOUS ERROR:", err);
-        setError("Unable to load previous elections");
+        setElections(res.data.filter(e => e.status === "closed" || new Date(e.end_date) < now));
+      } catch {
+        setError("History synchronization failed.");
       } finally {
         setLoading(false);
       }
     };
-
-    loadElections();
+    load();
   }, []);
 
-  /* ===========================
-     SEARCH
-  ============================ */
-  const filtered = useMemo(() => {
-    const q = search.toLowerCase();
-    return elections.filter(
-      (e) =>
-        e.title?.toLowerCase().includes(q) ||
-        e.description?.toLowerCase().includes(q) ||
-        e.TeamA?.toLowerCase().includes(q) ||
-        e.TeamB?.toLowerCase().includes(q) ||
-        e.tags?.some((t) => t.toLowerCase().includes(q))
-    );
-  }, [elections, search]);
+  if (loading) return <div className="loading">Syncing Global Archives...</div>;
 
-  /* ===========================
-     SORT
-  ============================ */
-  const sorted = useMemo(() => {
-  const data = [...filtered];
-
-  const popularity = (x) => x.CA + x.CB;
-  const start = (x) => new Date(x.start_date).getTime();
-  const end = (x) => new Date(x.end_date).getTime();
-  const duration = (x) => end(x) - start(x);
-
-  switch (sortType) {
-    case "TITLE_ASC":
-      data.sort((a, b) => a.title.localeCompare(b.title));
-      break;
-
-    case "TITLE_DESC":
-      data.sort((a, b) => b.title.localeCompare(a.title));
-      break;
-
-    case "POPULAR_ASC":
-      data.sort((a, b) => popularity(a) - popularity(b));
-      break;
-
-    case "POPULAR_DESC":
-      data.sort((a, b) => popularity(b) - popularity(a));
-      break;
-
-    case "START_ASC":
-      data.sort((a, b) => start(a) - start(b));
-      break;
-
-    case "START_DESC":
-      data.sort((a, b) => start(b) - start(a));
-      break;
-
-    case "END_ASC":
-      data.sort((a, b) => end(a) - end(b));
-      break;
-
-    case "END_DESC":
-      data.sort((a, b) => end(b) - end(a));
-      break;
-
-    case "DURATION":
-      data.sort((a, b) => duration(b) - duration(a));
-      break;
-
-    default:
-      break;
-  }
-
-  return data;
-}, [filtered, sortType]);
-
-  /* ===========================
-     LOADING
-  ============================ */
-  if (loading) {
-    return <div className="loading">Loading previous elections…</div>;
-  }
-
-  /* ===========================
-     UI
-  ============================ */
   return (
-    <>
-      <Navbar />
+    <div className="results-container">
+      <div className="section-header">
+        <h2>Certified Election Archives</h2>
+        <p>Verified historical results with absolute data integrity and cryptographic proof.</p>
+      </div>
 
-      <ActionBar
-        search={search}
-        setSearch={setSearch}
-        setSort={setSortType}
-      />
-
-      <div className="elections-page">
-        <h2 className="page-title">🏁 Previous Elections</h2>
-
-        {sorted.length === 0 ? (
-          <p className="empty">No previous elections</p>
-        ) : (
-          <div className="election-grid">
-            {sorted.map((e) => {
-              const canSeeResult =
-                user?.role === "admin" || e.result_declared === true;
-
-              const winner =
-                e.CA > e.CB ? e.TeamA :
-                e.CB > e.CA ? e.TeamB :
-                "Tie";
-
-              return (
-                <div className="election-card" key={e.id}>
-                  <h3 className="election-title">{e.title}</h3>
-
-                  <p className="election-desc">{e.description}</p>
-
-                  <div className="date-row">
-                    <span>
-                      📅 Start:{" "}
-                      {new Date(e.start_date).toLocaleDateString("en-IN")}
-                    </span>
-                    <span>
-                      🏁 End:{" "}
-                      {new Date(e.end_date).toLocaleDateString("en-IN")}
-                    </span>
+      <div className="results-list">
+        {elections.map((e) => {
+          const total = e.candidates.reduce((a, b) => a + b.votes, 0);
+          return (
+            <div className="result-row-card glass-card animate-slide" key={e.id}>
+              <div className="result-main">
+                <div className="result-info">
+                  <div className="certified-badge">
+                     <i className="fas fa-certificate"></i> CERTIFIED
                   </div>
-
-                  {e.tags?.length > 0 && (
-                    <div className="tag-row">
-                      {e.tags.map((tag, i) => (
-                        <span key={i} className="tag-chip">
-                          #{tag}
-                        </span>
-                      ))}
+                  <h3 className="row-title">{e.title}</h3>
+                  <p className="row-desc">{e.description}</p>
+                  
+                  <div className="results-meta">
+                    <div className="m-item">
+                       <label>TOTAL PARTICIPATION</label>
+                       <b>{total} Votes Recorded</b>
                     </div>
-                  )}
-
-                  {/* RESULT VISIBILITY */}
-                  <div className="vote-stat">
-                    <ResultBar greenVotes={e.CA} purpleVotes={e.CB} greenName={e.TeamA} purpleName={e.TeamB}/>
+                    <div className="m-item">
+                       <label>CONCLUSION DATE</label>
+                       <b>{new Date(e.end_date).toLocaleDateString()}</b>
+                    </div>
                   </div>
                 </div>
-              );
-            })}
+
+                <div className="viz-section">
+                   <ResultBar candidates={e.candidates} />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {elections.length === 0 && (
+          <div className="empty-state">
+             <i className="fas fa-history"></i>
+             <h3>Archive is empty</h3>
+             <p>No elections have been concluded on this network yet.</p>
           </div>
         )}
       </div>
+
       <ErrorPopup message={error} onClose={() => setError("")}/>
-    </>
+    </div>
   );
 }

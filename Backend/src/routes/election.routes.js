@@ -6,7 +6,8 @@ import {
   getAll,
   update,
   getOne,
-  deleteElection
+  deleteElection,
+  close
 } from "../controllers/election.controller.js";
 
 const router = Router();
@@ -15,10 +16,12 @@ router.get("/", verifyBackendToken, getAll);
 
 router.get("/:id", verifyBackendToken, getOne);
 
-router.post("/", verifyBackendToken, create);
+router.post("/", verifyBackendToken, adminOnly, create);
 
 router.put("/:id", verifyBackendToken, adminOnly, update);
 
 router.delete("/:id", verifyBackendToken, adminOnly, deleteElection);
+
+router.put("/:id/close", verifyBackendToken, adminOnly, close);
 
 export default router;

@@ -1,21 +1,28 @@
 import jwt from "jsonwebtoken";
 
+/**
+ * Verifies the JWT sent in the Authorization header.
+ * Expects: Authorization: Bearer <token>
+ */
 const verifyBackendToken = (req, res, next) => {
   try {
-    const token =
-      req.cookies.token ||
-      req.headers.authorization?.split(" ")[1];
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-      return res.status(401).json({ message: "No token" });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ success: false, error: "Unauthorized: No token provided." });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const token = authHeader.split(" ")[1];
 
-    req.user = decoded; // { id, role }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // decoded = { userId, role, email, iat, exp }
+    req.user = decoded;
     next();
-  } catch {
-    return res.status(401).json({ message: "Invalid token" });
+  } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ success: false, error: "Token expired. Please log in again." });
+    }
+    return res.status(401).json({ success: false, error: "Unauthorized: Invalid token." });
   }
 };
 

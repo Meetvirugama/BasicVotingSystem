@@ -1,205 +1,125 @@
 import { useEffect, useMemo, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import "../public/upcomingEle.css";
-import Navbar from "./Navbar";
-import ActionBar from "./ActionBar";
-import ErrorPopup from "./ErrorPopup";
-import Img from "../assets/haunted-house.png";
+import "../public/elections.css";
 import { AuthContext } from "../context/AuthContext";
+import ErrorPopup from "./ErrorPopup";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
-export default function UpcomingEle() {
+const ReceiptModal = ({ receipt, onClose }) => {
+  if (!receipt) return null;
+  return (
+    <div className="modal-overlay">
+      <div className="modal-card animate-slide">
+        <div className="modal-icon success"><i className="fas fa-check-circle"></i></div>
+        <h3>Vote Confirmed</h3>
+        <p>Your selection has been securely recorded and verified in the system.</p>
+        <div className="receipt-box">
+          <label>OFFICIAL RECEIPT HASH</label>
+          <code>{receipt.receipt}</code>
+        </div>
+        <button className="btn-primary" onClick={onClose} style={{ width: '100%' }}>Dismiss</button>
+      </div>
+    </div>
+  );
+};
+
+export default function UpcomingElections() {
   const [elections, setElections] = useState([]);
+  const [voted, setVoted] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [sortType, setSortType] = useState("DEFAULT");
-  const [error , setError] = useState("");
-
+  const [error, setError] = useState("");
+  const [successReceipt, setSuccessReceipt] = useState(null);
+  const [fingerprint, setFingerprint] = useState(null);
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
 
-  /* ===========================
-     LOAD UPCOMING ELECTIONS
-  ============================ */
   useEffect(() => {
-    const loadElections = async () => {
-      try {
-        const res = await api.get("/election");
-        const now = new Date();
-
-        const upcoming = res.data.filter(
-          (e) => e.status === "draft" || new Date(e.start_date) > now
-        );
-
-        setElections(upcoming);
-      } catch (err) {
-        setError("Unable to load upcoming elections");
-      } finally {
-        setLoading(false);
-      }
+    const init = async () => {
+      const fp = await FingerprintJS.load();
+      const result = await fp.get();
+      setFingerprint(result.visitorId);
     };
-
-    loadElections();
+    init();
   }, []);
 
-  /* ===========================
-     SEARCH
-  ============================ */
-  const filtered = useMemo(() => {
-    const q = search.toLowerCase();
-    return elections.filter(
-      (e) =>
-        e.title?.toLowerCase().includes(q) ||
-        e.description?.toLowerCase().includes(q) ||
-        e.tags?.some((t) => t.toLowerCase().includes(q))
-    );
-  }, [elections, search]);
-
-  /* ===========================
-     SORT
-  ============================ */
-  const sorted = useMemo(() => {
-  const data = [...filtered];
-
-  const popularity = (x) => x.CA + x.CB;
-  const start = (x) => new Date(x.start_date).getTime();
-  const end = (x) => new Date(x.end_date).getTime();
-  const duration = (x) => end(x) - start(x);
-
-  switch (sortType) {
-    case "TITLE_ASC":
-      data.sort((a, b) => a.title.localeCompare(b.title));
-      break;
-
-    case "TITLE_DESC":
-      data.sort((a, b) => b.title.localeCompare(a.title));
-      break;
-
-    case "POPULAR_ASC":
-      data.sort((a, b) => popularity(a) - popularity(b));
-      break;
-
-    case "POPULAR_DESC":
-      data.sort((a, b) => popularity(b) - popularity(a));
-      break;
-
-    case "START_ASC":
-      data.sort((a, b) => start(a) - start(b));
-      break;
-
-    case "START_DESC":
-      data.sort((a, b) => start(b) - start(a));
-      break;
-
-    case "END_ASC":
-      data.sort((a, b) => end(a) - end(b));
-      break;
-
-    case "END_DESC":
-      data.sort((a, b) => end(b) - end(a));
-      break;
-
-    case "DURATION":
-      data.sort((a, b) => duration(b) - duration(a));
-      break;
-
-    default:
-      break;
-  }
-
-  return data;
-}, [filtered, sortType]);
-  /* ===========================
-     ADMIN DELETE
-  ============================ */
-  const deleteElection = async (id) => {
-    if (!window.confirm("Delete this upcoming election?")) return;
-
+  const loadData = async () => {
     try {
-      await api.delete(`/election/${id}`);
-      setElections((prev) => prev.filter((e) => e.id !== id));
+      const [eleRes, voteRes] = await Promise.all([api.get("/election"), api.get("/vote/my")]);
+      const now = new Date();
+      setElections(eleRes.data.filter(e => e.status === "active" && new Date(e.start_date) <= now && new Date(e.end_date) >= now));
+      setVoted(voteRes.data.map(v => v.election_id));
     } catch {
-      setError("Delete failed");
+      setError("System unavailable. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  /* ===========================
-     LOADING
-  ============================ */
-  if (loading) {
-    return <div className="loading">Loading upcoming elections…</div>;
-  }
+  useEffect(() => { loadData(); }, []);
 
-  /* ===========================
-     UI
-  ============================ */
+  const handleVote = async (id, candidateId) => {
+    try {
+      const res = await api.post("/vote", { election_id: id, candidate_id: candidateId, fingerprint });
+      setSuccessReceipt(res.data);
+      await loadData();
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to process vote.");
+    }
+  };
+
+  if (loading) return <div className="loading">Authenticating Session...</div>;
+
   return (
-    <>
-      <Navbar />
+    <div className="elections-container">
+      <div className="section-header">
+        <h2>Live Voting Portal</h2>
+        <p>Participate in active secure elections. Your identity is verified and anonymous.</p>
+      </div>
 
-      <ActionBar
-        search={search}
-        setSearch={setSearch}
-        setSort={setSortType}
-      />
+      <div className="election-list">
+        {elections.map((e) => {
+          const hasVoted = voted.includes(e.id);
+          const total = e.candidates.reduce((a, b) => a + b.votes, 0);
 
-      <div className="elections-page">
-        <h2 className="page-title">
-          <span className="title-with-img">
-            <img src={Img} alt="Upcoming" className="title-img" />
-            Upcoming Elections
-          </span>
-        </h2>
-
-        {sorted.length === 0 ? (
-          <div className="up-empty">No upcoming elections</div>
-        ) : (
-          <div className="election-grid">
-            {sorted.map((e) => (
-              <div className="election-card" key={e.id}>
-                <h3>{e.title}</h3>
-                <p>{e.description}</p>
-
-                <div className="date-row">
-                  <span>🚀 {new Date(e.start_date).toLocaleDateString("en-IN")}</span>
-                  <span>⏳ {new Date(e.end_date).toLocaleDateString("en-IN")}</span>
+          return (
+            <div className="election-row-card glass-card" key={e.id}>
+              <div className="row-main">
+                <div className="row-info">
+                  <h3 className="row-title">{e.title}</h3>
+                  <p className="row-desc">{e.description}</p>
+                  <div className="row-meta">
+                    <span><i className="fas fa-users"></i> {total} Total Votes</span>
+                    <span><i className="fas fa-clock"></i> Ends {new Date(e.end_date).toLocaleDateString()}</span>
+                  </div>
                 </div>
 
-                {e.tags?.length > 0 && (
-                  <div className="tag-row">
-                    {e.tags.map((t, i) => (
-                      <span key={i} className="tag-chip">#{t}</span>
-                    ))}
-                  </div>
-                )}
-
-                <div className="up-wait">🕒 Voting has not started yet</div>
-
-                {user?.role === "admin" && (
-                  <div className="admin-actions">
-                    <button
-                      className="admin-edit"
-                      onClick={() =>
-                        navigate(`/admin/election/edit/${e.id}`)
-                      }
+                <div className="candidate-grid">
+                  {e.candidates.map(c => (
+                    <button 
+                      key={c.id} 
+                      className={`candidate-btn ${hasVoted ? 'disabled' : ''}`}
+                      onClick={() => !hasVoted && handleVote(e.id, c.id)}
                     >
-                      ✏️ Edit
+                      <span className="c-name">{c.name}</span>
+                      {hasVoted ? <i className="fas fa-check-circle"></i> : <i className="fas fa-plus"></i>}
                     </button>
-
-                    <button
-                      className="admin-delete"
-                      onClick={() => deleteElection(e.id)}
-                    >
-                      🗑 Delete
-                    </button>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
-            ))}
+            </div>
+          );
+        })}
+
+        {elections.length === 0 && (
+          <div className="empty-state">
+             <i className="fas fa-inbox"></i>
+             <h3>No active sessions</h3>
+             <p>All voting sessions are currently concluded or upcoming.</p>
           </div>
         )}
       </div>
+
+      <ReceiptModal receipt={successReceipt} onClose={() => setSuccessReceipt(null)} />
       <ErrorPopup message={error} onClose={() => setError("")}/>
-    </>
+    </div>
   );
 }

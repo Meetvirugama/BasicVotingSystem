@@ -16,20 +16,46 @@ const User = sequelize.define("User", {
     unique: true,
     allowNull: false
   },
-  mobile: {
+  password: {
+    type: DataTypes.STRING,
+    allowNull: true // Null for Google OAuth users
+  },
+  googleId: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: true
+  },
+  isVerified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  verificationCode: {
     type: DataTypes.STRING,
     allowNull: true
   },
-  age: {
-    type: DataTypes.INTEGER
-  },
   role: {
     type: DataTypes.STRING, 
-    defaultValue: "voter"
+    defaultValue: "user"
   },
-  is_verified: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true
+  reputationScore: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  level: {
+    type: DataTypes.STRING,
+    defaultValue: "Beginner" // Beginner, Active, Expert, Master
+  },
+  coinBalance: {
+    type: DataTypes.DECIMAL(18, 2),
+    defaultValue: 0.00
+  },
+  lastCheckIn: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  checkInStreak: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   }
 }, {
   tableName: "users",
