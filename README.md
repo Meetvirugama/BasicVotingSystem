@@ -126,24 +126,24 @@ Set up these keys in a `.env` file inside `Backend/`:
 USE_DEMO_DB=true                 # Set to 'true' for local SQLite, 'false' for production PostgreSQL
 
 # Supabase Production PostgreSQL Credentials (Only needed if USE_DEMO_DB=false)
-DB_HOST=aws-1-ap-southeast-2.pooler.supabase.com
+DB_HOST=your-supabase-project.pooler.supabase.com
 DB_PORT=6543
 DB_NAME=postgres
-DB_USER=postgres.wdymrbdtschkzrjgdvlo
-DB_PASSWORD=rSRoawxCiz12qqFp
+DB_USER=postgres.your-project-id
+DB_PASSWORD=your-supabase-password-here
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SECURITY & AUTHENTICATION
 # ──────────────────────────────────────────────────────────────────────────────
-JWT_SECRET=high-level-secure-voting-secret
-GOOGLE_CLIENT_ID=79151610115-r1fr7v2apoe8drbmdgksd3mmj43n68hs.apps.googleusercontent.com
+JWT_SECRET=your-super-secure-jwt-secret-key-here
+GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
 
 # ──────────────────────────────────────────────────────────────────────────────
 # INTEGRATIONS & APIS (OPTIONAL)
 # ──────────────────────────────────────────────────────────────────────────────
 GROQ_API_KEY=gsk_your_groq_ai_model_key_here
-EMAIL_USER=meetvirugama4902@gmail.com
-EMAIL_PASS=qixzhzuwdmhjclby
+EMAIL_USER=your-email-address@gmail.com
+EMAIL_PASS=your-email-app-password-here
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ROUTING & RUNTIME ENVIRONMENT
